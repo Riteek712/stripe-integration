@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/stripe/stripe-go/v75"
 	"github.com/stripe/stripe-go/v75/customer"
+	"github.com/stripe/stripe-go/v75/paymentintent"
 )
 
 func main() {
@@ -36,4 +37,20 @@ func main() {
 		return
 	}
 	fmt.Printf("Customer created: %v\n", result)
+	fmt.Printf("Customer name: %v\n", result.Name)
+	fmt.Printf("Customer email: %v\n", result.Email)
+
+	piParams := &stripe.PaymentIntentParams{
+		Amount:   stripe.Int64(2000),
+		Currency: stripe.String(string(stripe.CurrencyUSD)),
+		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
+			Enabled: stripe.Bool(true),
+		},
+	}
+	piresult, err := paymentintent.New(piParams)
+	if err != nil {
+		fmt.Print(err)
+	}
+	fmt.Println(piresult)
+
 }
